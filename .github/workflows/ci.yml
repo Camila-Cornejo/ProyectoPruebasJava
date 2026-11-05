@@ -1,0 +1,33 @@
+name: Pruebas Automatizadas Java
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: calculadora/pom.xml
+
+      - name: Compilar y ejecutar pruebas
+        working-directory: calculadora
+        run: mvn -B clean test
+
+      - name: Publicar resultados JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes-junit
+          path: calculadora/target/surefire-reports/
+          if-no-files-found: warn
