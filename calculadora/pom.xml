@@ -25,6 +25,9 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+   
+
+
     </dependencies>
   </dependencyManagement>
 
@@ -63,7 +66,18 @@
       <version>1.11.0</version>
       <scope>test</scope>
     </dependency>
+<!-- JMeter: pruebas de rendimiento -->
+<dependency>
+    <groupId>org.apache.jmeter</groupId>
+    <artifactId>ApacheJMeter_java</artifactId>
+    <version>5.6.3</version>
+</dependency>
 
+<dependency>
+    <groupId>org.apache.jmeter</groupId>
+    <artifactId>ApacheJMeter_core</artifactId>
+    <version>5.6.3</version>
+</dependency>
   </dependencies>
 
   <build>
