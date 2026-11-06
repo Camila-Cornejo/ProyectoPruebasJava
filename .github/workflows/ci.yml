@@ -28,7 +28,7 @@ jobs:
         if: always()
         working-directory: calculadora
         run: mvn -B surefire-report:report-only
-
+     
       - name: Publicar reportes
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,5 +37,6 @@ jobs:
           path: |
             calculadora/target/reports/
             calculadora/target/surefire-reports/
-	    calculadora/target/cucumber-report.html
+            calculadora/target/cucumber-report.html
           if-no-files-found: warn
+
