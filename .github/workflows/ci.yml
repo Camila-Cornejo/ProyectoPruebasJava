@@ -37,4 +37,5 @@ jobs:
           path: |
             calculadora/target/reports/
             calculadora/target/surefire-reports/
+	    calculadora/target/cucumber-report.html
           if-no-files-found: warn
