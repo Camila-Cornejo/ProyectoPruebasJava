@@ -20,15 +20,23 @@ jobs:
           cache: maven
           cache-dependency-path: calculadora/pom.xml
 
-      - name: Ejecutar pruebas JUnit
+      - name: Build - Compilar proyecto
         working-directory: calculadora
-        run: mvn -B clean test
+        run: mvn -B clean compile
+
+      - name: Ejecutar pruebas unitarias y BDD
+        working-directory: calculadora
+        run: mvn -B test
+
+      - name: Ejecutar pruebas de integracion
+        working-directory: calculadora
+        run: mvn -B failsafe:integration-test failsafe:verify
 
       - name: Generar reporte HTML
         if: always()
         working-directory: calculadora
         run: mvn -B surefire-report:report-only
-     
+
       - name: Publicar reportes
         if: always()
         uses: actions/upload-artifact@v4
@@ -36,7 +44,8 @@ jobs:
           name: reportes-pruebas
           path: |
             calculadora/target/reports/
+            calculadora/target/site/
             calculadora/target/surefire-reports/
+            calculadora/target/failsafe-reports/
             calculadora/target/cucumber-report.html
           if-no-files-found: warn
-
