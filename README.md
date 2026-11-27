@@ -452,3 +452,127 @@ de calidad y un sistema de alertas automáticas.
 Considero que estas herramientas permiten detectar
 errores oportunamente, mejorar el seguimiento de las
 pruebas y mantener la calidad del software.
+
+
+---
+
+## Actividad 3: Deployment Pipeline y Rollback Automatico
+
+### Objetivo
+
+Implementar un pipeline de despliegue automatizado que
+permita validar la calidad del software mediante pruebas
+de aceptacion y recuperar una version estable ante
+un fallo durante el despliegue.
+
+### Herramientas utilizadas
+
+- Java 17.
+- Apache Maven.
+- JUnit 5.
+- Cucumber.
+- Maven Surefire.
+- Maven Failsafe.
+- Git y GitHub.
+- GitHub Actions.
+- Scripts Bash.
+
+### Etapas del Deployment Pipeline
+
+1. Descarga del codigo fuente.
+2. Configuracion del entorno Java 17.
+3. Compilacion y ejecucion de pruebas automatizadas.
+4. Validacion mediante Acceptance Gate.
+5. Despliegue en ambiente de staging simulado.
+6. Validacion de la aplicacion desplegada.
+7. Respaldo de la version estable.
+8. Simulacion de un despliegue fallido.
+9. Deteccion automatica del fallo.
+10. Ejecucion del rollback automatico.
+11. Validacion de la aplicacion recuperada.
+12. Publicacion del artefacto recuperado.
+
+### Criterios de aceptacion
+
+| ID | Criterio | Resultado |
+|---|---|---|
+| CA-01 | Inicio correcto de la aplicacion | Aprobado |
+| CA-02 | Operacion de suma: 5 + 3 = 8 | Aprobado |
+| CA-03 | Operacion de resta: 10 - 4 = 6 | Aprobado |
+
+### Resultados obtenidos
+
+- 3 pruebas unitarias exitosas.
+- 5 escenarios BDD exitosos.
+- 3 pruebas de integracion exitosas.
+- 3 criterios de aceptacion aprobados.
+- Despliegue exitoso en staging simulado.
+- Respaldo exitoso de la version estable 1.0.
+- Deteccion de un fallo intencional.
+- Rollback automatico exitoso.
+- Recuperacion y validacion de la aplicacion.
+- Integracion de los cambios a la rama main.
+
+### Estrategia de rollback
+
+Se implemento un script Bash denominado rollback.sh,
+encargado de restaurar el archivo JAR de respaldo
+cuando se detecta un fallo en el ambiente de staging.
+
+Para comprobar su funcionamiento, se simulo un
+despliegue defectuoso mediante un archivo JAR invalido.
+El pipeline detecto el error y restauro automaticamente
+la version estable 1.0.
+
+Posteriormente, se ejecutaron nuevamente las pruebas
+de aceptacion, obteniendo los mensajes:
+
+- ACCEPTANCE TESTS SUCCESS
+- ROLLBACK SUCCESS
+- RECOVERY SUCCESS
+
+El ambiente utilizado corresponde a una simulacion
+academica dentro de GitHub Actions y no a un ambiente
+productivo real.
+
+### Conclusion
+
+Durante esta actividad pude implementar un proceso
+automatizado de despliegue, incorporando pruebas de
+aceptacion y mecanismos de recuperacion ante fallos.
+
+La implementacion del rollback automatico me permitio
+comprender la importancia de mantener versiones
+estables y validar el funcionamiento de una aplicacion
+despues de cada despliegue.
+
+Gracias a las herramientas de integracion y entrega
+continua, fue posible automatizar las validaciones,
+detectar errores y recuperar la aplicacion sin
+intervencion manual durante la ejecucion del pipeline.
+
+### Validación final de los pipelines
+
+Una vez finalizada la implementación, se integraron
+los cambios de la rama feature/deployment-rollback
+a la rama principal main.
+
+Se verificó la ejecución exitosa de ambos pipelines
+en GitHub Actions:
+
+- Pruebas Automatizadas Java: ejecución exitosa
+  en 40 segundos.
+- Deployment Pipeline: ejecución exitosa
+  en 21 segundos.
+- Commit: fd520a0.
+- Rama: main.
+
+Los resultados obtenidos permiten comprobar el
+funcionamiento de la integración continua, las
+pruebas automatizadas, el despliegue simulado
+y los mecanismos de recuperación ante fallos.
+
+#### Evidencia de ejecución final
+
+![Pipelines exitosos en main](evidencias/23_Pipeline_Final_Main.png)
+
