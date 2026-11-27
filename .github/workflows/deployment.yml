@@ -1,0 +1,53 @@
+
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/deployment-rollback
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: calculadora/pom.xml
+
+      - name: Build y pruebas automatizadas
+        working-directory: calculadora
+        run: mvn -B clean verify
+
+      - name: Acceptance Gate
+        working-directory: calculadora
+        run: |
+          sed -i 's/\r$//' acceptance/acceptance-tests.sh
+          bash acceptance/acceptance-tests.sh
+
+      - name: Desplegar en ambiente de prueba
+        working-directory: calculadora
+        run: |
+          mkdir -p staging
+          cp target/calculadora-1.0-SNAPSHOT.jar staging/calculadora.jar
+          echo "DEPLOYMENT SUCCESS"
+
+      - name: Validar aplicacion desplegada
+        working-directory: calculadora
+        run: bash acceptance/acceptance-tests.sh staging/calculadora.jar
+
+      - name: Publicar artefacto desplegado
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculadora-staging
+          path: calculadora/staging/calculadora.jar
+          if-no-files-found: error
