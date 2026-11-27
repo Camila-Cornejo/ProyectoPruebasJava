@@ -32,6 +32,7 @@ jobs:
         working-directory: calculadora
         run: |
           sed -i 's/\r$//' acceptance/acceptance-tests.sh
+          sed -i 's/\r$//' deployment/rollback.sh
           bash acceptance/acceptance-tests.sh
 
       - name: Desplegar en ambiente de prueba
@@ -45,7 +46,39 @@ jobs:
         working-directory: calculadora
         run: bash acceptance/acceptance-tests.sh staging/calculadora.jar
 
-      - name: Publicar artefacto desplegado
+      - name: Respaldar version estable
+        working-directory: calculadora
+        run: |
+          mkdir -p backup
+          cp staging/calculadora.jar backup/calculadora-v1.jar
+          echo "BACKUP SUCCESS - Version 1.0"
+
+      - name: Simular despliegue fallido
+        working-directory: calculadora
+        run: |
+          echo "Simulando artefacto defectuoso de version 2.0"
+          echo "Archivo defectuoso" > staging/calculadora.jar
+
+      - name: Detectar fallo en staging
+        id: validacion
+        continue-on-error: true
+        working-directory: calculadora
+        run: bash acceptance/acceptance-tests.sh staging/calculadora.jar
+
+      - name: Ejecutar rollback automatico
+        if: steps.validacion.outcome == 'failure'
+        working-directory: calculadora
+        run: bash deployment/rollback.sh
+
+      - name: Comprobar recuperacion
+        working-directory: calculadora
+        run: |
+          test "${{ steps.validacion.outcome }}" = "failure"
+          cmp backup/calculadora-v1.jar staging/calculadora.jar
+          bash acceptance/acceptance-tests.sh staging/calculadora.jar
+          echo "RECOVERY SUCCESS"
+
+      - name: Publicar artefacto recuperado
         uses: actions/upload-artifact@v4
         with:
           name: calculadora-staging
